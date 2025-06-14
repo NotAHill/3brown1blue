@@ -56,7 +56,28 @@
   background-color: #f8f9fa;
 }
 
+.input-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.topic-input {
+  width: 100%;
+  padding: 0.6em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
 .file-input {
+  width: 100%;
   margin-bottom: 1rem;
 }
 
@@ -110,7 +131,35 @@
 .success {
   color: #198754;
   margin: 1rem 0;
-  padding: 1rem;
+  padding: 1.5rem;
   background-color: #d1e7dd;
   border-radius: 4px;
+  text-align: left;
+}
+
+.success h3 {
+  margin-top: 0;
+  color: #0f5132;
+}
+
+.success h4 {
+  color: #0f5132;
+  margin-bottom: 0.5rem;
+}
+
+.relevant-pages {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #198754;
+}
+
+.relevant-pages ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.relevant-pages li {
+  padding: 0.25rem 0;
+  color: #0f5132;
 }
