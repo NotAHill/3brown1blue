@@ -30,5 +30,17 @@ def upload_file():
         'code': code
     })
 
+@app.route('/generate_video', methods=['POST'])
+def generate_video():
+    data = request.get_json()
+    code = data.get('code')
+    prompt = data.get('prompt')
+    if code is None or prompt is None:
+        return jsonify({'error': 'Missing code or prompt'}), 400
+    # Simulate video generation
+    time.sleep(5)
+    # Return a mocked video id (could be a random or fixed string)
+    return jsonify({'video_id': 'sULa9Lc4pck'})
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000) 
