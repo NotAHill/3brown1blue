@@ -31,6 +31,7 @@ const PDFUpload: React.FC<PDFUploadProps> = ({ onUpload }) => {
         throw new Error(data.error || "Upload failed");
       }
 
+      await new Promise((resolve) => setTimeout(resolve, 5000));
       onUpload(file, data.code);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");

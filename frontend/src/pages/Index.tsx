@@ -25,7 +25,7 @@ const Index = () => {
       messages: [
         {
           role: "ai",
-          content: `Hello! Your document has been processed with code ${uploadCode}. Ask me anything about it — I'll reply with an explanation and a 3Blue1Brown-style video.`,
+          content: `Your document is ready! Ask me anything about it.`,
           videoId: undefined,
         },
       ],

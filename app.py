@@ -28,6 +28,16 @@ pdf_processor = PDFProcessor(
 # Dictionary to store temporary file information
 temp_files = {}
 
+# Demo video IDs in order
+DEMO_VIDEOS = [
+    "vector-def",
+    "vector-addition",
+    "vector-multiplicaiton"
+]
+
+# Keep track of the current video index
+current_video_index = 0
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     file = request.files['pdf_filename']
@@ -96,15 +106,21 @@ def process_file(file_code):
 
 @app.route('/generate_video', methods=['POST'])
 def generate_video():
+    global current_video_index
     data = request.get_json()
     code = data.get('code')
     prompt = data.get('prompt')
     if code is None or prompt is None:
         return jsonify({'error': 'Missing code or prompt'}), 400
-    # Simulate video generation
-    time.sleep(5)
-    # Return a mocked video id (could be a random or fixed string)
-    return jsonify({'video_id': 'sULa9Lc4pck'})
+    
+    # Get the current video and increment the index
+    video_id = DEMO_VIDEOS[current_video_index]
+    current_video_index = (current_video_index + 1) % len(DEMO_VIDEOS)
+    
+    # Simulate processing time
+    time.sleep(2)
+    
+    return jsonify({'video_id': video_id})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000) 
