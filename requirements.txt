@@ -2,3 +2,6 @@ flask
 flask-cors
 python-dotenv
 Werkzeug==2.2.2
+google-genai
+PyPDF2
+flask-caching
