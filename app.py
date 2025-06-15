@@ -31,17 +31,7 @@ temp_files = {}
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part'}), 400
-    
-    if 'topic' not in request.form:
-        return jsonify({'error': 'No topic provided'}), 400
-    
-    file = request.files['file']
-    topic = request.form['topic']
-    
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
+    file = request.files['pdf_filename']
     
     if not file.filename.endswith('.pdf'):
         return jsonify({'error': 'File must be a PDF'}), 400
@@ -60,7 +50,6 @@ def upload_file():
         # Store the file information
         temp_files[file_code] = {
             'path': temp_path,
-            'topic': topic,
             'original_filename': file.filename
         }
         
