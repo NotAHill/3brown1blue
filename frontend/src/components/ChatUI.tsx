@@ -39,22 +39,52 @@ const initialAIResponse = (prompt: string): ChatMessageData => {
 
 const ChatUI: React.FC<ChatUIProps> = ({ code, messages, onSendMessage }) => {
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [pendingPrompt, setPendingPrompt] = useState<string | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, loading]);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  const handleSend = async () => {
+    if (!input.trim() || !code) return;
+    const prompt = input.trim();
     const userMsg: ChatMessageData = {
       role: "user",
-      content: input.trim(),
+      content: prompt,
     };
-    const aiMsg: ChatMessageData = initialAIResponse(input.trim());
     onSendMessage(userMsg);
-    onSendMessage(aiMsg);
     setInput("");
+    setLoading(true);
+    setPendingPrompt(prompt);
+    try {
+      const res = await fetch("http://127.0.0.1:5000/generate_video", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, prompt }),
+      });
+      const data = await res.json();
+      const aiMsg: ChatMessageData = {
+        role: "ai",
+        content: `Here's an explanation inspired by 3Blue1Brown (mocked):\n\n${
+          prompt
+            ? "Let's explore your topic!"
+            : "What would you like explained?"
+        }`,
+        videoId: data.video_id,
+      };
+      onSendMessage(aiMsg);
+    } catch (err) {
+      const aiMsg: ChatMessageData = {
+        role: "ai",
+        content: "Sorry, there was an error generating the video.",
+      };
+      onSendMessage(aiMsg);
+    } finally {
+      setLoading(false);
+      setPendingPrompt(null);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -73,6 +103,18 @@ const ChatUI: React.FC<ChatUIProps> = ({ code, messages, onSendMessage }) => {
         {messages.map((msg, i) => (
           <ChatMessage message={msg} key={i} />
         ))}
+        {loading && (
+          <div className="flex w-full mb-6 justify-start">
+            <div className="flex flex-col max-w-2xl items-start w-full">
+              <div className="rounded-2xl px-5 py-3 shadow-md transition text-base leading-relaxed bg-muted text-foreground border border-muted-foreground/10 flex items-center gap-3 min-w-[180px]">
+                <span className="font-semibold animate-pulse">cooking...</span>
+                <div className="w-24 h-2 bg-muted-foreground/20 rounded-full overflow-hidden">
+                  <div className="h-2 bg-primary animate-pulse w-1/2 rounded-full" />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <div ref={chatEndRef}></div>
       </div>
       <div
@@ -86,12 +128,13 @@ const ChatUI: React.FC<ChatUIProps> = ({ code, messages, onSendMessage }) => {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           aria-label="Type your message"
+          disabled={loading}
         />
         <Button
           variant="default"
           className="ml-2 flex gap-2"
           onClick={handleSend}
-          disabled={!input.trim()}
+          disabled={!input.trim() || loading}
           aria-label="Send message"
         >
           <MessageCircle size={20} />

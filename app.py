@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import logging
-import random
 import os
 from dotenv import load_dotenv
 from pdf_processor import GeminiProcessor, PDFProcessor
@@ -10,7 +9,7 @@ from PyPDF2 import PdfReader
 from flask_caching import Cache
 import tempfile
 import uuid
-
+import time
 
 # Load environment variables
 load_dotenv()
@@ -94,6 +93,18 @@ def process_file(file_code):
             del temp_files[file_code]
         except:
             pass
+
+@app.route('/generate_video', methods=['POST'])
+def generate_video():
+    data = request.get_json()
+    code = data.get('code')
+    prompt = data.get('prompt')
+    if code is None or prompt is None:
+        return jsonify({'error': 'Missing code or prompt'}), 400
+    # Simulate video generation
+    time.sleep(5)
+    # Return a mocked video id (could be a random or fixed string)
+    return jsonify({'video_id': 'sULa9Lc4pck'})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000) 
